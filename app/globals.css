@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FFFDF9; /* softer kawaii aesthetic background */
+  --foreground: #2C2C2C; /* softer dark grey text */
+  --card-bg: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1A1A24; /* deep soft night background */
+    --foreground: #F2F2F2; /* soft white for readability */
+    --card-bg: #2D2D3B; /* elevated dark card style */
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
