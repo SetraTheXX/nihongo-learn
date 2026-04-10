@@ -6,20 +6,78 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "background": "#f1f7ff",
+        "foreground": "#00324b",
         kawaii: {
-          sakura: "#FFB7B2",     // Soft pastel pink
-          peach: "#FFDAC1",      // Soft pastel peach
-          mint: "#E2F0CB",       // Soft pastel green
-          lavender: "#C7CEEA",   // Soft pastel purple
-          sky: "#B5EAD7",        // Soft pastel blue
-          card: "var(--card-bg)" // Card background responsive
-        }
+          peach: '#FFB7B2',
+          lavender: '#C7CEEA',
+          mint: '#E2F0CB',
+          sakura: '#FFDAC1',
+          sky: '#B5EAD7',
+          card: '#FFFFFF'
+        },
+        // Stitch Quiz Component Theme Colors (Material 3)
+        "on-error-container": "#510017",
+        "surface-variant": "#bde1ff",
+        "surface-bright": "#f1f7ff",
+        "on-tertiary": "#f8f0ff",
+        "on-primary": "#ffeff3",
+        "inverse-primary": "#fec4dd",
+        "outline-variant": "#80b3d8",
+        "inverse-on-surface": "#70a3c7",
+        "secondary-container": "#b2f2bb",
+        "secondary-dim": "#1f5b31",
+        "error-dim": "#a70138",
+        "inverse-surface": "#00101b",
+        "on-secondary-fixed": "#084a22",
+        "tertiary-dim": "#544b6a",
+        "on-secondary-container": "#215d33",
+        "on-secondary": "#ceffd2",
+        "surface-container": "#d4ebff",
+        "on-error": "#ffefef",
+        "tertiary": "#605676",
+        "on-background": "#00324b",
+        "secondary": "#2c673c",
+        "on-tertiary-fixed-variant": "#5d5372",
+        "primary-container": "#fec4dd",
+        "on-tertiary-fixed": "#403755",
+        "on-surface-variant": "#2a6082",
+        "on-secondary-fixed-variant": "#2c673c",
+        "outline": "#497c9f",
+        "on-primary-fixed-variant": "#714559",
+        "surface-dim": "#aadaff",
+        "on-primary-fixed": "#512a3d",
+        "secondary-fixed-dim": "#a4e3ad",
+        "surface": "#f1f7ff",
+        "primary-fixed": "#fec4dd",
+        "background-quiz": "#f1f7ff",
+        "surface-container-lowest": "#ffffff",
+        "tertiary-container": "#e4d7fd",
+        "secondary-fixed": "#b2f2bb",
+        "primary-fixed-dim": "#efb7cf",
+        "on-primary-container": "#663c50",
+        "surface-tint": "#7b4e63",
+        "error": "#b41340",
+        "surface-container-highest": "#bde1ff",
+        "on-tertiary-container": "#534968",
+        "tertiary-fixed-dim": "#d6c9ee",
+        "tertiary-fixed": "#e4d7fd",
+        "error-container": "#f74b6d",
+        "primary-dim": "#6d4357",
+        "on-surface": "#00324b",
+        "surface-container-low": "#e5f2ff",
+        "surface-container-high": "#c9e6ff",
+        "primary": "#7b4e63"
       },
+      fontFamily: {
+        "headline": ["Plus Jakarta Sans", "var(--font-noto-sans-jp)"],
+        "body": ["Be Vietnam Pro", "sans-serif"],
+        "label": ["Be Vietnam Pro", "sans-serif"]
+      }
     },
   },
   plugins: [],

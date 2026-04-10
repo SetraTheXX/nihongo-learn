@@ -2,29 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #FFFDF9; /* softer kawaii aesthetic background */
-  --foreground: #2C2C2C; /* softer dark grey text */
-  --card-bg: #FFFFFF;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1A1A24; /* deep soft night background */
-    --foreground: #F2F2F2; /* soft white for readability */
-    --card-bg: #2D2D3B; /* elevated dark card style */
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .font-japanese {
+    font-family: var(--font-noto-sans-jp), sans-serif;
+  }
+}
+
+/* Global Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Flashcard Flip 3D */
+.perspective {
+  perspective: 1200px;
+}
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
