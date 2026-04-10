@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SM2Item, createInitialItem, updateSM2 } from '@/lib/sm2';
 import { hiraganaData } from '@/data/hiragana';
+import { katakanaData } from '@/data/katakana';
 import {
   pushSingleCard,
   pushDailyStats,
@@ -35,7 +36,7 @@ interface LearningState {
   completedLessons: string[];
 
   // Aksiyonlar
-  initializeSession: () => void;
+  initializeSession: (alphabet?: "hiragana" | "katakana" | "all") => void;
   reviewCard: (cardId: string, quality: number) => void;
   recordQuizAnswer: (isCorrect: boolean) => void;
   completeLesson: (lessonId: string, xpReward: number) => void;
@@ -141,22 +142,42 @@ export const useLearningStore = create<LearningState>()(
 
       // ── Oturum Başlatma ──────────────────────────────────
 
-      initializeSession: () => {
+      // ── Oturum Başlatma ──────────────────────────────────
+
+      initializeSession: (alphabet = "hiragana") => {
         const { cardsData } = get();
         const now = new Date();
 
         let dueCards: string[] = [];
         let newCards: string[] = [];
 
+        let sourceData = [];
+        if (alphabet === "hiragana") {
+          sourceData = hiraganaData;
+        } else if (alphabet === "katakana") {
+          sourceData = katakanaData;
+        } else {
+          sourceData = [...hiraganaData, ...katakanaData];
+        }
+
         // 1. Vadesi gelen kartlar
         for (const [id, data] of Object.entries(cardsData)) {
-          if (new Date(data.nextReviewDate) <= now) {
-            dueCards.push(id);
+          const isHiragana = id.startsWith('h_');
+          const isKatakana = id.startsWith('k_');
+
+          if (
+            alphabet === "all" ||
+            (alphabet === "hiragana" && isHiragana) ||
+            (alphabet === "katakana" && isKatakana)
+          ) {
+            if (new Date(data.nextReviewDate) <= now) {
+              dueCards.push(id);
+            }
           }
         }
 
         // 2. Hiç çalışılmamış yeni kartlar
-        for (const card of hiraganaData) {
+        for (const card of sourceData) {
           if (!cardsData[card.id]) {
             newCards.push(card.id);
           }

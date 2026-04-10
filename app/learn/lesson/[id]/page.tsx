@@ -4,8 +4,10 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { japaneseCourse, findLesson } from "@/data/course";
-import type { Lesson, VocabItem } from "@/data/course";
+import type { Lesson, VocabItem, SlideContent } from "@/data/course";
 import { hiraganaData } from "@/data/hiragana";
+import { katakanaData } from "@/data/katakana";
+const allAlphabetData = [...hiraganaData, ...katakanaData];
 import { useLearningStore } from "@/store/useLearningStore";
 
 export default function LessonPage() {
@@ -14,9 +16,15 @@ export default function LessonPage() {
   const lessonId = params.id as string;
 
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   const result = findLesson(japaneseCourse, lessonId);
+  
+  // Bilgi slaytları varsa ve henüz bitmediyse önce onları göster. 
+  // HOOK KURALI GEREĞİ return'lerden önce çağrılmalıdır.
+  const [showSlides, setShowSlides] = useState(() => {
+    return result?.lesson?.slides && result.lesson.slides.length > 0;
+  });
+
+  useEffect(() => setMounted(true), []);
 
   if (!mounted) {
     return (
@@ -48,6 +56,17 @@ export default function LessonPage() {
 
   const { section, lesson } = result;
 
+  if (showSlides && lesson.slides) {
+    return (
+      <SlideLesson 
+        slides={lesson.slides} 
+        sectionTitle={section.title} 
+        lessonTitle={lesson.title} 
+        onComplete={() => setShowSlides(false)} 
+      />
+    );
+  }
+
   // Ders türüne göre doğru bileşeni yükle
   if (lesson.type === "flashcard" || lesson.type === "checkpoint") {
     return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
@@ -61,6 +80,96 @@ export default function LessonPage() {
   return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
 }
 
+// ── Bilgi Slaytı Dersi ──────────────────────────────────────────
+
+function SlideLesson({ slides, sectionTitle, lessonTitle, onComplete }: { slides: SlideContent[], sectionTitle: string, lessonTitle: string, onComplete: () => void }) {
+  const router = useRouter();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const slide = slides[currentIndex];
+  const progressPercent = Math.round((currentIndex / slides.length) * 100);
+
+  const handleNext = () => {
+    if (currentIndex + 1 >= slides.length) {
+      onComplete(); // Slaytlar bitti, derse geç
+    } else {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-surface-bright flex flex-col">
+      {/* Üst Bar */}
+      <div className="bg-white border-b border-outline-variant/20 px-4 py-3 safe-area-top">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <button
+            onClick={() => router.push("/learn/course")}
+            className="p-2 -ml-2 rounded-xl hover:bg-surface-container transition-colors"
+          >
+            <span className="material-symbols-outlined text-on-surface-variant">close</span>
+          </button>
+          <div className="flex-1">
+            <div className="h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.4 }}
+              />
+            </div>
+          </div>
+          <span className="text-xs font-bold text-on-surface-variant min-w-[40px] text-right">
+            Bilgi
+          </span>
+        </div>
+      </div>
+
+      {/* İçerik */}
+      <div className="flex-1 flex flex-col px-4 py-6 max-w-2xl mx-auto w-full">
+        <p className="text-sm text-primary font-bold mb-1 uppercase tracking-wider">{sectionTitle}</p>
+        <h1 className="text-2xl font-bold font-headline text-on-surface mb-6">{lessonTitle}</h1>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 flex flex-col bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-outline-variant/30"
+          >
+            {slide.emoji && (
+              <div className="text-7xl mb-6">{slide.emoji}</div>
+            )}
+            <h2 className="text-2xl font-bold text-on-surface mb-4">{slide.title}</h2>
+            
+            <div className="text-lg text-on-surface-variant leading-relaxed whitespace-pre-wrap">
+              {slide.content.split('\n').map((line, i) => (
+                <p key={i} className="mb-3">
+                  {line.includes('**') ? (
+                    <span dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                  ) : line}
+                </p>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Devam Butonu */}
+      <div className="p-4 bg-white border-t border-outline-variant/20">
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={handleNext}
+            className="w-full py-4 rounded-2xl bg-primary text-on-primary font-bold text-lg hover:bg-primary-dim transition-colors shadow-sm"
+          >
+            {currentIndex + 1 >= slides.length ? "Derse Başla" : "Devam Et"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Flashcard Dersi ─────────────────────────────────────────────
 
 function FlashcardLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: string }) {
@@ -72,7 +181,7 @@ function FlashcardLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitl
   const cards = useMemo(() => {
     if (lesson.cardIds && lesson.cardIds.length > 0) {
       return lesson.cardIds.map(id => {
-        const data = hiraganaData.find(h => h.id === id);
+        const data = allAlphabetData.find(h => h.id === id);
         return data ? {
           id: data.id,
           front: data.character,
@@ -102,10 +211,10 @@ function FlashcardLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitl
   const progressPercent = cards.length > 0 ? Math.round(((currentIndex) / cards.length) * 100) : 0;
 
   const handleAnswer = (quality: number) => {
-    // Eğer hiragana kartıysa SM2 güncelle
+    // Eğer hiragana veya katakana kartıysa SM2 güncelle
     if (lesson.cardIds && current) {
-      const hiraganaCard = hiraganaData.find(h => h.id === current.id);
-      if (hiraganaCard) {
+      const alphabetCard = allAlphabetData.find(h => h.id === current.id);
+      if (alphabetCard) {
         reviewCard(current.id, quality);
       }
     }
@@ -239,13 +348,13 @@ function QuizLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: st
     if (!lesson.cardIds) return [];
 
     const cards = lesson.cardIds
-      .map(id => hiraganaData.find(h => h.id === id))
+      .map(id => allAlphabetData.find(h => h.id === id))
       .filter(Boolean);
 
     return cards.map(card => {
       if (!card) return null;
 
-      const wrongOptions = hiraganaData
+      const wrongOptions = allAlphabetData
         .filter(h => h.id !== card.id)
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
