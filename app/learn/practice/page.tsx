@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Flashcard from "@/components/Flashcard";
 import { hiraganaData } from "@/data/hiragana";
 import { katakanaData } from "@/data/katakana";
+import { allGrammarData } from "@/data/course";
+import GrammarFlashcard from "@/components/GrammarFlashcard";
 
 const allAlphabetData = [...hiraganaData, ...katakanaData];
 import { useLearningStore } from "@/store/useLearningStore";
@@ -41,12 +43,14 @@ export default function LearnPage() {
 
   const isSessionComplete = currentSessionQueue.length > 0 && currentIndex >= currentSessionQueue.length;
   const currentCardId = currentSessionQueue[currentIndex];
-  const currentData = allAlphabetData.find((c) => c.id === currentCardId);
+  const currentAlphabetData = allAlphabetData.find((c) => c.id === currentCardId);
+  const currentGrammarData = allGrammarData.find((c) => c.id === currentCardId);
+  const currentData = currentAlphabetData || currentGrammarData;
   const progressPercent =
     currentSessionQueue.length > 0 ? (currentIndex / currentSessionQueue.length) * 100 : 0;
 
-  const handleStartSession = (alphabet: "hiragana" | "katakana" | "all") => {
-    initializeSession(alphabet);
+  const handleStartSession = (alphabet: "hiragana" | "katakana" | "all" | "grammar") => {
+    initializeSession(alphabet as any);
     setShowOptions(false);
   };
 
@@ -64,7 +68,7 @@ export default function LearnPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             <button
               onClick={() => handleStartSession("hiragana")}
               className="flex flex-col items-center gap-3 p-6 bg-white border-2 border-primary/20 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm hover:shadow-md"
@@ -85,6 +89,13 @@ export default function LearnPage() {
             >
               <span className="text-5xl font-japanese text-tertiary">あア</span>
               <span className="font-bold text-lg">Karışık</span>
+            </button>
+            <button
+              onClick={() => handleStartSession("grammar")}
+              className="flex flex-col items-center gap-3 p-6 bg-white border-2 border-emerald-500/20 rounded-3xl hover:border-emerald-500 hover:bg-emerald-500/5 transition-all shadow-sm hover:shadow-md"
+            >
+              <span className="text-5xl font-japanese text-emerald-500 font-bold">文法</span>
+              <span className="font-bold text-lg">Gramer</span>
             </button>
           </div>
         </main>
@@ -129,7 +140,11 @@ export default function LearnPage() {
             <div className="absolute top-10 left-10 md:left-24 w-32 h-32 bg-primary-container/30 rounded-full blur-3xl opacity-60 pointer-events-none" />
             <div className="absolute -bottom-10 right-10 md:right-24 w-40 h-40 bg-secondary-container/30 rounded-full blur-3xl opacity-60 pointer-events-none" />
 
-            <Flashcard data={currentData} />
+            {currentGrammarData ? (
+              <GrammarFlashcard data={currentGrammarData} />
+            ) : (
+              <Flashcard data={currentAlphabetData as any} />
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

@@ -76,6 +76,10 @@ export default function LessonPage() {
     return <QuizLesson lesson={lesson} sectionTitle={section.title} />;
   }
 
+  if (lesson.type === "grammar") {
+    return <GrammarLesson lesson={lesson} sectionTitle={section.title} />;
+  }
+
   // Fallback: flashcard modunda aç
   return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
 }
@@ -543,6 +547,166 @@ function LessonComplete({
           Devam Et
         </button>
       </motion.div>
+    </div>
+  );
+}
+
+// ── Gramer Dersi ───────────────────────────────────────────────
+
+function GrammarLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: string }) {
+  const router = useRouter();
+  const completeLesson = useLearningStore((s) => s.completeLesson);
+  const items = lesson.grammarItems || [];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+
+  if (items.length === 0) return null;
+
+  const current = items[currentIndex];
+  // Calculate progress percent without looking ahead (or base it on what's done)
+  const progressPercent = Math.round((currentIndex / items.length) * 100);
+
+  const handleNext = () => {
+    setIsFlipped(false);
+    if (currentIndex + 1 >= items.length) {
+      setIsComplete(true);
+      completeLesson(lesson.id, lesson.xpReward);
+    } else {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  if (isComplete) {
+    return <LessonComplete lesson={lesson} onBack={() => router.push("/learn/course")} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-surface-bright flex flex-col">
+      {/* Üst Bar */}
+      <div className="bg-white border-b border-outline-variant/20 px-4 py-3 safe-area-top">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <button
+            onClick={() => router.push("/learn/course")}
+            className="p-2 -ml-2 rounded-xl hover:bg-surface-container transition-colors"
+          >
+            <span className="material-symbols-outlined text-on-surface-variant">close</span>
+          </button>
+          <div className="flex-1">
+            <div className="h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.4 }}
+              />
+            </div>
+          </div>
+          <span className="text-xs font-bold text-on-surface-variant min-w-[40px] text-right">
+            {currentIndex + 1}/{items.length}
+          </span>
+        </div>
+      </div>
+
+      {/* Ortadaki Alan (Kart) */}
+      <div className="flex-1 flex flex-col px-4 pt-8 pb-32 max-w-2xl mx-auto w-full relative">
+        <p className="text-sm font-bold text-primary mb-2 text-center uppercase tracking-widest">{sectionTitle}</p>
+        <h2 className="text-xl font-bold text-center text-on-surface mb-8">Gramer & Cümle Analizi</h2>
+
+        <div className="flex-1 flex flex-col justify-center perspective-1000">
+          <AnimatePresence mode="wait">
+            {!isFlipped ? (
+              // ÖN YÜZ - Sadece Cümle
+              <motion.div
+                key="front"
+                initial={{ rotateY: -90, opacity: 0 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: 90, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-outline-variant/30 p-8 flex flex-col items-center justify-center min-h-[300px]"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <div className="text-4xl sm:text-5xl font-bold font-japanese tracking-wider mb-4 text-center">
+                  {current.sentence}
+                </div>
+                <div className="text-xl text-on-surface-variant text-center opacity-80">
+                  {current.romaji}
+                </div>
+              </motion.div>
+            ) : (
+              // ARKA YÜZ - Çeviri, Analiz ve Açıklama
+              <motion.div
+                key="back"
+                initial={{ rotateY: 90, opacity: 0 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: -90, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-outline-variant/30 p-6 sm:p-8 flex flex-col gap-6"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {/* Çeviri */}
+                <div className="text-center pb-4 border-b border-outline-variant/20">
+                  <span className="text-sm text-primary font-bold uppercase block mb-1">Çeviri</span>
+                  <div className="text-2xl font-bold text-on-surface">{current.translation}</div>
+                </div>
+
+                {/* Cümle Analizi (Bölünmüş kelimeler) */}
+                <div>
+                  <span className="text-sm text-primary font-bold uppercase block mb-3 text-center">Öğeler</span>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {current.breakdown.map((item, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`flex flex-col items-center p-3 rounded-2xl ${item.isParticle ? 'bg-secondary-container/50 border border-secondary/20' : 'bg-surface-container-high'}`}
+                      >
+                        <span className={`text-lg font-bold font-japanese ${item.isParticle ? 'text-secondary' : 'text-on-surface'}`}>
+                          {item.word}
+                        </span>
+                        <span className="text-xs text-on-surface-variant font-medium mt-1">{item.romaji}</span>
+                        <span className={`text-xs mt-0.5 ${item.isParticle ? 'text-secondary-dim font-bold' : 'text-on-surface-variant'}`}>
+                          {item.meaning}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Açıklama */}
+                <div className="bg-primary/5 rounded-2xl p-4 mt-2">
+                  <div className="flex items-start gap-3">
+                    <span className="material-symbols-outlined text-primary mt-0.5">lightbulb</span>
+                    <p className="text-sm text-on-surface font-medium leading-relaxed">
+                      {current.explanation}
+                    </p>
+                  </div>
+                </div>
+
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Sabit Alt Buton Alanı */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-outline-variant/20 safe-area-bottom">
+        <div className="max-w-2xl mx-auto">
+          {!isFlipped ? (
+            <button
+              onClick={() => setIsFlipped(true)}
+              className="w-full py-4 rounded-2xl bg-primary text-on-primary font-bold text-lg hover:bg-primary-dim transition-colors shadow-sm"
+            >
+              Çeviriyi ve Öğeleri İncele
+            </button>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="w-full py-4 rounded-2xl bg-secondary text-on-secondary font-bold text-lg hover:bg-secondary-dim transition-colors shadow-sm"
+            >
+              Devam Et
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

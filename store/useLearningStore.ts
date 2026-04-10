@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { SM2Item, createInitialItem, updateSM2 } from '@/lib/sm2';
 import { hiraganaData } from '@/data/hiragana';
 import { katakanaData } from '@/data/katakana';
+import { allGrammarData } from '@/data/course';
 import {
   pushSingleCard,
   pushDailyStats,
@@ -36,7 +37,7 @@ interface LearningState {
   completedLessons: string[];
 
   // Aksiyonlar
-  initializeSession: (alphabet?: "hiragana" | "katakana" | "all") => void;
+  initializeSession: (alphabet?: "hiragana" | "katakana" | "grammar" | "all") => void;
   reviewCard: (cardId: string, quality: number) => void;
   recordQuizAnswer: (isCorrect: boolean) => void;
   completeLesson: (lessonId: string, xpReward: number) => void;
@@ -151,24 +152,28 @@ export const useLearningStore = create<LearningState>()(
         let dueCards: string[] = [];
         let newCards: string[] = [];
 
-        let sourceData = [];
+        let sourceData: any[] = [];
         if (alphabet === "hiragana") {
           sourceData = hiraganaData;
         } else if (alphabet === "katakana") {
           sourceData = katakanaData;
+        } else if (alphabet === "grammar") {
+          sourceData = allGrammarData as any[];
         } else {
-          sourceData = [...hiraganaData, ...katakanaData];
+          sourceData = [...hiraganaData, ...katakanaData]; // All için sadece alfabeye ait olanlar karışık gelir, dilerse ayrıca hepsini birleştirebilir.
         }
 
         // 1. Vadesi gelen kartlar
         for (const [id, data] of Object.entries(cardsData)) {
           const isHiragana = id.startsWith('h_');
           const isKatakana = id.startsWith('k_');
+          const isGrammar = id.startsWith('gr-');
 
           if (
             alphabet === "all" ||
             (alphabet === "hiragana" && isHiragana) ||
-            (alphabet === "katakana" && isKatakana)
+            (alphabet === "katakana" && isKatakana) ||
+            (alphabet === "grammar" && isGrammar)
           ) {
             if (new Date(data.nextReviewDate) <= now) {
               dueCards.push(id);
