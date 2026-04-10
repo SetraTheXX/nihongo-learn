@@ -7,7 +7,7 @@
 
 // ── Tip Tanımları ───────────────────────────────────────────────
 
-export type LessonType = "flashcard" | "quiz" | "matching" | "reading" | "checkpoint";
+export type LessonType = "flashcard" | "quiz" | "matching" | "reading" | "checkpoint" | "grammar";
 
 export interface SlideContent {
   title: string;
@@ -23,6 +23,7 @@ export interface Lesson {
   type: LessonType;
   cardIds?: string[];     // flashcard/quiz türü için kart ID listesi
   vocabItems?: VocabItem[];  // kelime/kalıp dersleri için
+  grammarItems?: GrammarItem[]; // gramer kuralları ve cümle çalışması için
   readingContent?: ReadingContent; // okuma dersleri için
   slides?: SlideContent[]; // Ders öncesi gösterilecek bilgi slaytları
   xpReward: number;
@@ -45,6 +46,20 @@ export interface ReadingContent {
     question: string;
     options: string[];
     correctIndex: number;
+  }[];
+}
+
+export interface GrammarItem {
+  id: string;
+  sentence: string;      // e.g. "わたし は 学生 です"
+  romaji: string;        // e.g. "watashi wa gakusei desu"
+  translation: string;   // e.g. "Ben öğrenciyim."
+  explanation: string;   // Gramer kuralının açıklaması
+  breakdown: {           // Cümle öğeleri
+    word: string;
+    romaji: string;
+    meaning: string;
+    isParticle?: boolean; // Ek mi (örn: wa, ga, wo)
   }[];
 }
 
@@ -209,6 +224,38 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-2-4",
+          title: "Gramer: Hitap Ekleri (-san, -sensei)",
+          description: "İnsanlara isimleriyle hitap ederken kullanılan ekleri öğren",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec2-1",
+              sentence: "たなか さん",
+              romaji: "Tanaka san",
+              translation: "Tanaka Bey / Hanım",
+              explanation: "Japonca'da başkalarının isminin veya soyisminin sonuna '-san' eklenir. Bu, Bey/Hanım anlamına gelen temel saygı ekidir. (Kendi ismine ASLA -san ekleme!)",
+              breakdown: [
+                { word: "たなか", romaji: "Tanaka", meaning: "Tanaka (İsim)" },
+                { word: "さん", romaji: "san", meaning: "Bey/Hanım", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-sec2-2",
+              sentence: "やまだ せんせい",
+              romaji: "Yamada sensei",
+              translation: "Yamada Öğretmen",
+              explanation: "Öğretmenlere, doktorlara veya ustalara hitap ederken '-san' yerine '-sensei' kullanılır.",
+              breakdown: [
+                { word: "やまだ", romaji: "Yamada", meaning: "Yamada (İsim)" },
+                { word: "せんせい", romaji: "sensei", meaning: "Öğretmen", isParticle: true }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-2-5",
           title: "Kontrol Noktası",
           description: "Selamlaşma bilgini test et!",
           icon: "flag",
@@ -241,6 +288,170 @@ export const japaneseCourse: Course = {
             { japanese: "おなまえは？", romaji: "onamae wa?", meaning_tr: "Adınız nedir?", emoji: "❓" },
           ],
           xpReward: 15,
+        },
+        {
+          id: "les-3-1-grammar-1",
+          title: "İlk Gramer: です (desu)",
+          description: "Japonca'da dır/dir yapısını nasıl kuracağımızı öğrenelim.",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-desu-1",
+              sentence: "がくせい です",
+              romaji: "gakusei desu",
+              translation: "Öğrenciyim.",
+              explanation: "Japoncada cümlelerin sonuna gelen 'desu', Türkçe'deki '-dır/-dir' veya '-yım/-yim' eklerine karşılık gelir. Cümleyi kibar ve tamamlanmış yapar.",
+              breakdown: [
+                { word: "がくせい", romaji: "gakusei", meaning: "Öğrenci" },
+                { word: "です", romaji: "desu", meaning: "(Ben) ...yım", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-desu-2",
+              sentence: "にほんじん です",
+              romaji: "nihonjin desu",
+              translation: "Japonum.",
+              explanation: "Kendini tanıtırken mesleğinin veya milliyetinin sonuna sadece 'desu' ekleyebilirsin.",
+              breakdown: [
+                { word: "にほんじん", romaji: "nihonjin", meaning: "Japon" },
+                { word: "です", romaji: "desu", meaning: "(Ben) ...um", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-desu-3",
+              sentence: "せんせい です",
+              romaji: "sensei desu",
+              translation: "Öğretmenim.",
+              explanation: "Başkası için konuşuyorsan 'O bir öğretmendir' anlamına da gelebilir. Japonca'da özne genellikle bağlamdan anlaşılır.",
+              breakdown: [
+                { word: "せんせい", romaji: "sensei", meaning: "Öğretmen" },
+                { word: "です", romaji: "desu", meaning: "(Ben) ...im", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-desu-4",
+              sentence: "エンジニア です",
+              romaji: "enjinia desu",
+              translation: "Mühendisim.",
+              explanation: "Katakana ile yazılan yabancı kökenli meslekler (engineer -> enjinia) için de aynı kural geçerlidir.",
+              breakdown: [
+                { word: "エンジニア", romaji: "enjinia", meaning: "Mühendis" },
+                { word: "です", romaji: "desu", meaning: "(Ben) ...im", isParticle: true }
+              ]
+            }
+          ],
+          xpReward: 20,
+        },
+        {
+          id: "les-3-1-grammar-2",
+          title: "Konu Eki: は (wa)",
+          description: "Kimden veya neden bahsettiğimizi belirtmek için は ekini öğreniyoruz.",
+          icon: "link",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-wa-1",
+              sentence: "わたし は がくせい です",
+              romaji: "watashi wa gakusei desu",
+              translation: "Ben öğrenciyim.",
+              explanation: "は (wa) eki, cümlenin NE HAKKINDA olduğunu gösterir. Yazılışı 'ha' (は) olmasına rağmen, partikel(ek) olarak kullanıldığında 'WA' diye okunur. 'Bana gelince, ben öğrenciyim' demektir.",
+              breakdown: [
+                { word: "わたし", romaji: "watashi", meaning: "Ben" },
+                { word: "は", romaji: "wa", meaning: "(Konu Eki)", isParticle: true },
+                { word: "がくせい", romaji: "gakusei", meaning: "Öğrenci" },
+                { word: "です", romaji: "desu", meaning: "...yım", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-wa-2",
+              sentence: "アリ は せんせい です",
+              romaji: "Ari wa sensei desu",
+              translation: "Ali öğretmendir.",
+              explanation: "Başkalarından bahsederken de kural aynıdır. [Kişi] + wa + [Durum] + desu.",
+              breakdown: [
+                { word: "アリ", romaji: "Ari", meaning: "Ali" },
+                { word: "は", romaji: "wa", meaning: "(Konu Eki)", isParticle: true },
+                { word: "せんせい", romaji: "sensei", meaning: "Öğretmen" },
+                { word: "です", romaji: "desu", meaning: "...dir", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-wa-3",
+              sentence: "メルト は いしゃ です",
+              romaji: "Meruto wa isha desu",
+              translation: "Mert doktordur.",
+              explanation: "İsimler yabancı olduğu için Katakana (メルト) ile yazılıyor, kural her zaman baştaki cümlenin konusunu belirten [は] ekidir.",
+              breakdown: [
+                { word: "メルト", romaji: "Meruto", meaning: "Mert" },
+                { word: "は", romaji: "wa", meaning: "(Konu Eki)", isParticle: true },
+                { word: "いしゃ", romaji: "isha", meaning: "Doktor" },
+                { word: "です", romaji: "desu", meaning: "...dur", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-wa-4",
+              sentence: "わたし は トルコじん です",
+              romaji: "watashi wa torukojin desu",
+              translation: "Ben Türküm.",
+              explanation: "Milliyet söylerken Ülke adının sonuna JIN (じん) eklenir. トルコ (Toruko) + じん (jin) = Türk.",
+              breakdown: [
+                { word: "わたし", romaji: "watashi", meaning: "Ben" },
+                { word: "は", romaji: "wa", meaning: "(Konu Eki)", isParticle: true },
+                { word: "トルコじん", romaji: "torukojin", meaning: "Türk (Kişi)" },
+                { word: "です", romaji: "desu", meaning: "...üm", isParticle: true }
+              ]
+            }
+          ],
+          xpReward: 20,
+        },
+        {
+          id: "les-3-1-grammar-3",
+          title: "Soru Eki: か (ka)",
+          description: "Japonca'da soru sormak için soru işareti yerine か (ka) kullanılır.",
+          icon: "help_center",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-ka-1",
+              sentence: "がくせい です か",
+              romaji: "gakusei desu ka",
+              translation: "Öğrenci misin?",
+              explanation: "Japonca'da soru işareti yoktur (modern yazımda bazen kullanılsa da). Cümlenin en sonuna か (ka) ekleyerek cümleyi soru yaparsınız.",
+              breakdown: [
+                { word: "がくせい", romaji: "gakusei", meaning: "Öğrenci" },
+                { word: "です", romaji: "desu", meaning: "...dir / ...misin", isParticle: true },
+                { word: "か", romaji: "ka", meaning: "(Soru Eki)", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-ka-2",
+              sentence: "にほんじん です か",
+              romaji: "nihonjin desu ka",
+              translation: "Japon musun?",
+              explanation: "[İsim] + desu + ka? = [İsim] misin? kalıbı ile karşımızdakine soru sorabiliriz.",
+              breakdown: [
+                { word: "にほんじん", romaji: "nihonjin", meaning: "Japon" },
+                { word: "です", romaji: "desu", meaning: "..." },
+                { word: "か", romaji: "ka", meaning: "(Soru Eki)", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-ka-3",
+              sentence: "アリ は せんせい です か",
+              romaji: "Ari wa sensei desu ka",
+              translation: "Ali öğretmen midir?",
+              explanation: "Uzun cümlelerde de kural değişmez, sadece en sona か (ka) eklenir.",
+              breakdown: [
+                { word: "アリ", romaji: "Ari", meaning: "Ali" },
+                { word: "は", romaji: "wa", meaning: "(Konu Eki)", isParticle: true },
+                { word: "せんせい", romaji: "sensei", meaning: "Öğretmen" },
+                { word: "です", romaji: "desu", meaning: "...dir" },
+                { word: "か", romaji: "ka", meaning: "(Soru Eki)", isParticle: true }
+              ]
+            }
+          ],
+          xpReward: 20,
         },
         {
           id: "les-3-2",
@@ -296,28 +507,28 @@ export const japaneseCourse: Course = {
         {
           id: "les-4-1",
           title: "さ Satırı: sa shi su se so",
-          description: "Sonraki 5 hiragana harfini öğren",
+          description: "Sonraki 5 hiragana harfini ve 2 eski harfi öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_sa", "h_shi", "h_su", "h_se", "h_so"],
+          cardIds: ["h_a", "h_ka", "h_sa", "h_shi", "h_su", "h_se", "h_so"],
           xpReward: 15,
         },
         {
           id: "les-4-2",
           title: "た Satırı: ta chi tsu te to",
-          description: "Sonraki 5 hiragana harfini öğren",
+          description: "Sonraki 5 hiragana harfini ve 2 eski harfi öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_ta", "h_chi", "h_tsu", "h_te", "h_to"],
+          cardIds: ["h_i", "h_ki", "h_ta", "h_chi", "h_tsu", "h_te", "h_to"],
           xpReward: 15,
         },
         {
           id: "les-4-3",
           title: "な Satırı: na ni nu ne no",
-          description: "Sonraki 5 hiragana harfini öğren",
+          description: "Sonraki 5 hiragana harfini ve 2 eski harfi öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_na", "h_ni", "h_nu", "h_ne", "h_no"],
+          cardIds: ["h_u", "h_ku", "h_na", "h_ni", "h_nu", "h_ne", "h_no"],
           xpReward: 15,
         },
         {
@@ -409,6 +620,53 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-5-4",
+          title: "Gramer: Soru ve Olumsuzluk",
+          description: "Japonca'da soru sormayı ve olumsuz cümleleri kurmayı öğrenelim.",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec5-1",
+              sentence: "これ は なに です か",
+              romaji: "kore wa nani desu ka",
+              translation: "Bu nedir?",
+              explanation: "Soru sormak için cümlenin sonuna sadece 'ka' (か) eklenir. Soru işareti (?) yazılı dilde her zaman kullanılmaz, ancak vurguyu 'ka' sağlar.",
+              breakdown: [
+                { word: "これ", romaji: "kore", meaning: "Bu" },
+                { word: "は", romaji: "wa", meaning: "(konu)", isParticle: true },
+                { word: "なに", romaji: "nani", meaning: "Ne" },
+                { word: "です", romaji: "desu", meaning: "dır/dir", isParticle: true },
+                { word: "か", romaji: "ka", meaning: "(soru)", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-sec5-2",
+              sentence: "がくせい じゃ ない です",
+              romaji: "gakusei ja nai desu",
+              translation: "Öğrenci değilim.",
+              explanation: "'desu' (olumlu) yapısının olumsuz hali 'ja nai desu' şeklindedir. İsimlerin ve bazı sıfatların sonuna gelerek onları olumsuz yapar.",
+              breakdown: [
+                { word: "がくせい", romaji: "gakusei", meaning: "Öğrenci" },
+                { word: "じゃ ない です", romaji: "ja nai desu", meaning: "değilim", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-sec5-3",
+              sentence: "すし を たべます",
+              romaji: "sushi o tabemasu",
+              translation: "Suşi yiyorum.",
+              explanation: "Japoncada fiillerin standart, kibar bitişi '-masu'dur (tabemasu = yerim). Nesneleri belirtmek için 'o' (を) eki kullanılır.",
+              breakdown: [
+                { word: "すし", romaji: "sushi", meaning: "Suşi" },
+                { word: "を", romaji: "o", meaning: "(belirtme)", isParticle: true },
+                { word: "たべます", romaji: "tabemasu", meaning: "yerim / yiyorum" }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-5-5",
           title: "Kontrol Noktası",
           description: "Kalıp bilgini test et!",
           icon: "flag",
@@ -478,6 +736,41 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-6-4",
+          title: "Gramer: Zaman ve Yaş",
+          description: "Japonca'da sayıları cümle içinde nasıl kullandığımızı öğrenelim.",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec6-1",
+              sentence: "いま さんじ です",
+              romaji: "ima sanji desu",
+              translation: "Şimdi saat üç.",
+              explanation: "Saatleri söylemek için sayının sonuna '-ji' (zaman/saat) eklenir.",
+              breakdown: [
+                { word: "いま", romaji: "ima", meaning: "Şimdi" },
+                { word: "さんじ", romaji: "sanji", meaning: "Saat 3" },
+                { word: "です", romaji: "desu", meaning: "dır/dir", isParticle: true }
+              ]
+            },
+            {
+              id: "gr-sec6-2",
+              sentence: "わたし は にじゅうさい です",
+              romaji: "watashi wa nijuusai desu",
+              translation: "Ben yirmi yaşındayım.",
+              explanation: "Yaş söylerken sayının sonuna '-sai' (yaşında) eklenir. Nijuu (20) + sai = Nijuusai.",
+              breakdown: [
+                { word: "わたし", romaji: "watashi", meaning: "Ben" },
+                { word: "は", romaji: "wa", meaning: "(konu)", isParticle: true },
+                { word: "にじゅうさい", romaji: "nijuusai", meaning: "20 yaşında" },
+                { word: "です", romaji: "desu", meaning: "(yım)", isParticle: true }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-6-5",
           title: "Kontrol Noktası",
           description: "Sayılar ve zaman bilgini test et!",
           icon: "flag",
@@ -500,28 +793,28 @@ export const japaneseCourse: Course = {
         {
           id: "les-7-1",
           title: "は Satırı: ha hi fu he ho",
-          description: "Sonraki 5 hiragana harfini öğren",
+          description: "Sonraki 5 hiragana harfini ve 2 eski harfi öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_ha", "h_hi", "h_fu", "h_he", "h_ho"],
+          cardIds: ["h_ka", "h_sa", "h_ha", "h_hi", "h_fu", "h_he", "h_ho"],
           xpReward: 15,
         },
         {
           id: "les-7-2",
           title: "ま Satırı: ma mi mu me mo",
-          description: "Sonraki 5 hiragana harfini öğren",
+          description: "Sonraki 5 hiragana harfini ve 2 eski harfi öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_ma", "h_mi", "h_mu", "h_me", "h_mo"],
+          cardIds: ["h_ta", "h_na", "h_ma", "h_mi", "h_mu", "h_me", "h_mo"],
           xpReward: 15,
         },
         {
           id: "les-7-3",
           title: "や-ら-わ Satırları",
-          description: "ya yu yo, ra ri ru re ro, wa wo n harflerini öğren",
+          description: "Kalan harfler ve eski harflerle çalışma",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["h_ya", "h_yu", "h_yo", "h_ra", "h_ri", "h_ru", "h_re", "h_ro", "h_wa", "h_wo", "h_n"],
+          cardIds: ["h_a", "h_i", "h_ya", "h_yu", "h_yo", "h_ra", "h_ri", "h_ru", "h_re", "h_ro", "h_wa", "h_wo", "h_n"],
           xpReward: 20,
         },
         {
@@ -546,6 +839,40 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-7-5",
+          title: "Gramer: Fiiller ve Ekler (ni/e /de)",
+          description: "Japonca'da yönelme ve bulunma eklerini öğren",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec7-1",
+              sentence: "がっこう に いきます",
+              romaji: "gakkou ni ikimasu",
+              translation: "Okula gidiyorum.",
+              explanation: "Bir yere yönelmeyi anlatırken 'ni' (e/a) eki kullanılır.",
+              breakdown: [
+                { word: "がっこう", romaji: "gakkou", meaning: "Okul" },
+                { word: "に", romaji: "ni", meaning: "(yönelme -a/-e)", isParticle: true },
+                { word: "いきます", romaji: "ikimasu", meaning: "gidiyorum" }
+              ]
+            },
+            {
+              id: "gr-sec7-2",
+              sentence: "いえ で たべます",
+              romaji: "ie de tabemasu",
+              translation: "Evde yiyorum.",
+              explanation: "Bir eylemin yapıldığı yeri belirtmek için 'de' (de/da) kullanılır.",
+              breakdown: [
+                { word: "いえ", romaji: "ie", meaning: "Ev" },
+                { word: "で", romaji: "de", meaning: "(bulunma -de/-da)", isParticle: true },
+                { word: "たべます", romaji: "tabemasu", meaning: "yerim / yiyorum" }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-7-6",
           title: "Kontrol Noktası",
           description: "Hiragana ustalık sınavı — hepsini biliyor musun?",
           icon: "flag",
@@ -626,6 +953,40 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-8-4",
+          title: "Gramer: Sıfatlar ve Beğeniler (Suki / Kirai)",
+          description: "Japonca'da sevdiğimiz ve sevmediğimiz şeyleri nasıl söyleriz?",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec8-1",
+              sentence: "すし が すき です",
+              romaji: "sushi ga suki desu",
+              translation: "Suşiyi severim.",
+              explanation: "'Suki' (sevmek/beğenmek) cümlesinde nesne her zaman 'ga' (が) eki alır. Unutmayın, 'o' (を) eki kullanılmaz.",
+              breakdown: [
+                { word: "すし", romaji: "sushi", meaning: "Suşi" },
+                { word: "が", romaji: "ga", meaning: "(özne/belirtme)", isParticle: true },
+                { word: "すき です", romaji: "suki desu", meaning: "severim" }
+              ]
+            },
+            {
+              id: "gr-sec8-2",
+              sentence: "にく が きらい です",
+              romaji: "niku ga kirai desu",
+              translation: "Et sevmem / nefret ederim.",
+              explanation: "'Kirai' sevmemek anlamına gelir. Tıpkı 'suki' gibi 'ga' ekiyle kullanılır.",
+              breakdown: [
+                { word: "にく", romaji: "niku", meaning: "Et" },
+                { word: "が", romaji: "ga", meaning: "(özne/belirtme)", isParticle: true },
+                { word: "きらい です", romaji: "kirai desu", meaning: "sevmem" }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-8-5",
           title: "Final Sınavı",
           description: "A1 Bölüm 1 final sınavı — tüm bilgini kanıtla!",
           icon: "emoji_events",
@@ -663,7 +1024,7 @@ export const japaneseCourse: Course = {
               emoji: "📐"
             }
           ],
-          cardIds: ["k_a", "k_i", "k_u", "k_e", "k_o"],
+          cardIds: ["h_a", "h_ka", "h_sa", "k_a", "k_i", "k_u", "k_e", "k_o"],
           xpReward: 15,
         },
         {
@@ -672,7 +1033,7 @@ export const japaneseCourse: Course = {
           description: "カ(Ka), サ(Sa) ve タ(Ta) gruplarını öğren",
           icon: "text_fields",
           type: "flashcard",
-          cardIds: ["k_ka", "k_ki", "k_ku", "k_ke", "k_ko", "k_sa", "k_shi", "k_su", "k_se", "k_so"],
+          cardIds: ["h_ta", "h_na", "h_ma", "k_ka", "k_ki", "k_ku", "k_ke", "k_ko", "k_sa", "k_shi", "k_su", "k_se", "k_so"],
           xpReward: 20,
         },
         {
@@ -701,6 +1062,40 @@ export const japaneseCourse: Course = {
         },
         {
           id: "les-9-5",
+          title: "Gramer: Katakana ile Cümle Kurmak",
+          description: "Öğrendiğin yabancı kelimeleri Japonca gramer yapısında kullan.",
+          icon: "architecture",
+          type: "grammar",
+          grammarItems: [
+            {
+              id: "gr-sec9-1",
+              sentence: "コーヒー を のみます",
+              romaji: "koohii o nomimasu",
+              translation: "Kahve içiyorum.",
+              explanation: "Japonlar katakana kelimeleri tamamen normal Japonca kurallarıyla birleştirir. Kelime İngilizce kökenli 'Coffee' olsa da gramer tamamen Japonca.",
+              breakdown: [
+                { word: "コーヒー", romaji: "koohii", meaning: "Kahve" },
+                { word: "を", romaji: "o", meaning: "(belirtme)", isParticle: true },
+                { word: "のみます", romaji: "nomimasu", meaning: "içerim" }
+              ]
+            },
+            {
+              id: "gr-sec9-2",
+              sentence: "サッカー が すき です",
+              romaji: "sakkaa ga suki desu",
+              translation: "Futbol (soccer) severim.",
+              explanation: "Burada da bildiğimiz 'suki' (sevmek) yapısını 'soccer' (futbol) kelimesi ile kullandık.",
+              breakdown: [
+                { word: "サッカー", romaji: "sakkaa", meaning: "Futbol" },
+                { word: "が", romaji: "ga", meaning: "(özne/belirtme)", isParticle: true },
+                { word: "すき です", romaji: "suki desu", meaning: "severim" }
+              ]
+            }
+          ],
+          xpReward: 25,
+        },
+        {
+          id: "les-9-6",
           title: "Kontrol Noktası",
           description: "Katakana ve Yabancı Kelimeler testini geç!",
           icon: "flag",
@@ -712,6 +1107,11 @@ export const japaneseCourse: Course = {
     },
   ],
 };
+
+// Pratik modu vb. için sistemdeki tüm gramer kartlarını düz bir liste yapar
+export const allGrammarData = japaneseCourse.sections
+  .flatMap(s => s.lessons)
+  .flatMap(l => l.grammarItems || []);
 
 // ── Yardımcı Fonksiyonlar ───────────────────────────────────────
 
