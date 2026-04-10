@@ -124,9 +124,10 @@ function SectionCard({
   const isSectionComplete = completedInSection === section.lessons.length;
 
   // Bölüm kilitli mi? İlk bölüm her zaman açık, diğerleri önceki bölümün son dersi tamamlanmışsa açık
-  const isSectionLocked = sectionIndex > 0 && !completedLessons.includes(
-    course.sections[sectionIndex - 1].lessons[course.sections[sectionIndex - 1].lessons.length - 1].id
-  );
+  // const isSectionLocked = sectionIndex > 0 && !completedLessons.includes(
+  //   course.sections[sectionIndex - 1].lessons[course.sections[sectionIndex - 1].lessons.length - 1].id
+  // );
+  const isSectionLocked = false; // Test aşaması için tüm bölümler açık
 
   return (
     <motion.div

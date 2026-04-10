@@ -9,6 +9,12 @@
 
 export type LessonType = "flashcard" | "quiz" | "matching" | "reading" | "checkpoint";
 
+export interface SlideContent {
+  title: string;
+  content: string;
+  emoji?: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -18,6 +24,7 @@ export interface Lesson {
   cardIds?: string[];     // flashcard/quiz türü için kart ID listesi
   vocabItems?: VocabItem[];  // kelime/kalıp dersleri için
   readingContent?: ReadingContent; // okuma dersleri için
+  slides?: SlideContent[]; // Ders öncesi gösterilecek bilgi slaytları
   xpReward: number;
 }
 
@@ -82,6 +89,18 @@ export const japaneseCourse: Course = {
           description: "İlk 5 hiragana harfini tanı ve öğren",
           icon: "text_fields",
           type: "flashcard",
+          slides: [
+            {
+              title: "Japonca'ya Hoş Geldin!",
+              content: "Japoncada 3 farklı yazı sistemi kullanılır: Hiragana, Katakana ve Kanji. \nBiz en temel olan **Hiragana** ile başlıyoruz.",
+              emoji: "🇯🇵"
+            },
+            {
+              title: "Hiragana Nedir?",
+              content: "Hiragana, Japonca'nın temel taşıdır ve toplam 46 sesten oluşur.\nŞimdi Japonca'nın ünlü harfleriyle başlıyoruz: a, i, u, e, o.",
+              emoji: "✍️"
+            }
+          ],
           cardIds: ["h_a", "h_i", "h_u", "h_e", "h_o"],
           xpReward: 15,
         },
@@ -140,6 +159,18 @@ export const japaneseCourse: Course = {
           description: "İnsanları ilk defa selamlamayı öğren",
           icon: "waving_hand",
           type: "flashcard",
+          slides: [
+            {
+              title: "Japoncada Selamlaşma",
+              content: "Japon kültüründe selamlaşma çok önemlidir.\nGünlük hayatta karşana en çok çıkacak kelime 'Konnichiwa' (Merhaba) olacak.",
+              emoji: "🤝"
+            },
+            {
+              title: "Saygı ve Nezaket",
+              content: "Japoncada resmi ve samimi konuşma şekilleri farklıdır.\nÖrneğin arkadaşına 'Ohayou', tanımadığın veya saygı gösterdiğin birine 'Ohayou gozaimasu' dersin.",
+              emoji: "🙇"
+            }
+          ],
           vocabItems: [
             { japanese: "こんにちは", romaji: "konnichiwa", meaning_tr: "Merhaba / İyi günler", emoji: "👋" },
             { japanese: "おはようございます", romaji: "ohayou gozaimasu", meaning_tr: "Günaydın (resmi)", emoji: "🌅" },
@@ -603,6 +634,82 @@ export const japaneseCourse: Course = {
         },
       ],
     },
+
+    // ═══════════════════════════════════════════════════════════
+    // BÖLÜM 9: KATAKANA TEMELLERİ
+    // ═══════════════════════════════════════════════════════════
+    {
+      id: "sec-9",
+      title: "Katakana ve Yabancı Kelimeler",
+      description: "Japoncadeki yabancı kökenli kelimeleri yazmak için kullanılan Katakana ile tanış",
+      emoji: "🌎",
+      color: "blue",
+      lessons: [
+        {
+          id: "les-9-1",
+          title: "Katakana Nedir?",
+          description: "Katakana'nın İngilizce ve diğer dillerden geçen kelimelerde kullanımını gör",
+          icon: "public",
+          type: "flashcard",
+          slides: [
+            {
+              title: "Katakana Neden Var?",
+              content: "Japonlar dışarıdan kendi dillerine geçen kelimeleri (örneğin bilgisayar, kamera, kahve) Hiragana ile değil, Katakana ile yazarlar.",
+              emoji: "🌍"
+            },
+            {
+              title: "Keskin ve Düz Çizgiler",
+              content: "Katakana harfleri, Hiragana'nın aksine çok daha keskin ve düz çizgilere sahiptir.\nÖrn: A (ア), K (カ).",
+              emoji: "📐"
+            }
+          ],
+          cardIds: ["k_a", "k_i", "k_u", "k_e", "k_o"],
+          xpReward: 15,
+        },
+        {
+          id: "les-9-2",
+          title: "Ka, Sa, Ta Grupları",
+          description: "カ(Ka), サ(Sa) ve タ(Ta) gruplarını öğren",
+          icon: "text_fields",
+          type: "flashcard",
+          cardIds: ["k_ka", "k_ki", "k_ku", "k_ke", "k_ko", "k_sa", "k_shi", "k_su", "k_se", "k_so"],
+          xpReward: 20,
+        },
+        {
+          id: "les-9-3",
+          title: "Quiz: Katakana Giriş",
+          description: "Şimdiye kadar öğrendiğin Katakana harflerini test et",
+          icon: "quiz",
+          type: "quiz",
+          cardIds: ["k_a", "k_i", "k_u", "k_e", "k_o", "k_ka", "k_ki", "k_ku", "k_ke", "k_ko", "k_sa", "k_shi", "k_su", "k_se", "k_so"],
+          xpReward: 25,
+        },
+        {
+          id: "les-9-4",
+          title: "Yabancı Kelimeler (Gairaigo)",
+          description: "Japonların günlük hayatta kullandığı İngilizce kökenli kelimeler",
+          icon: "fastfood",
+          type: "flashcard",
+          vocabItems: [
+            { japanese: "カメラ", romaji: "kamera", meaning_tr: "Kamera", emoji: "📷" },
+            { japanese: "コーヒー", romaji: "koohii", meaning_tr: "Kahve", emoji: "☕" },
+            { japanese: "タクシー", romaji: "takushii", meaning_tr: "Taksi", emoji: "🚕" },
+            { japanese: "ホテル", romaji: "hoteru", meaning_tr: "Otel", emoji: "🏨" },
+            { japanese: "サッカー", romaji: "sakkaa", meaning_tr: "Futbol", emoji: "⚽" },
+          ],
+          xpReward: 15,
+        },
+        {
+          id: "les-9-5",
+          title: "Kontrol Noktası",
+          description: "Katakana ve Yabancı Kelimeler testini geç!",
+          icon: "flag",
+          type: "checkpoint",
+          cardIds: ["k_a", "k_i", "k_u", "k_e", "k_o", "k_ka", "k_ki", "k_ku", "k_ke", "k_ko"],
+          xpReward: 40,
+        },
+      ],
+    },
   ],
 };
 
@@ -632,6 +739,8 @@ export function findLesson(course: Course, lessonId: string): { section: Section
 
 /** Bir dersin kilidinin açık olup olmadığını kontrol et */
 export function isLessonUnlocked(course: Course, lessonId: string, completedLessons: string[]): boolean {
+  return true; // Test aşaması için tüm dersler açık
+  /*
   for (const section of course.sections) {
     for (let i = 0; i < section.lessons.length; i++) {
       if (section.lessons[i].id === lessonId) {
@@ -650,4 +759,5 @@ export function isLessonUnlocked(course: Course, lessonId: string, completedLess
     }
   }
   return false;
+  */
 }

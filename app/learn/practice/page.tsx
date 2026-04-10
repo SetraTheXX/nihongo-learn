@@ -2,6 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Flashcard from "@/components/Flashcard";
 import { hiraganaData } from "@/data/hiragana";
+import { katakanaData } from "@/data/katakana";
+
+const allAlphabetData = [...hiraganaData, ...katakanaData];
 import { useLearningStore } from "@/store/useLearningStore";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
@@ -10,13 +13,14 @@ import { motion } from "framer-motion";
 export default function LearnPage() {
   const { currentSessionQueue, currentIndex, initializeSession, reviewCard } = useLearningStore();
   const [mounted, setMounted] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     if (currentSessionQueue.length === 0) {
-      initializeSession();
+      setShowOptions(true);
     }
-  }, [currentSessionQueue.length, initializeSession]);
+  }, [currentSessionQueue.length]);
 
   if (!mounted) {
     return (
@@ -35,11 +39,59 @@ export default function LearnPage() {
     }
   };
 
-  const isSessionComplete = currentIndex >= currentSessionQueue.length;
+  const isSessionComplete = currentSessionQueue.length > 0 && currentIndex >= currentSessionQueue.length;
   const currentCardId = currentSessionQueue[currentIndex];
-  const currentData = hiraganaData.find((c) => c.id === currentCardId);
+  const currentData = allAlphabetData.find((c) => c.id === currentCardId);
   const progressPercent =
-    currentSessionQueue.length > 0 ? (currentIndex / currentSessionQueue.length) * 100 : 100;
+    currentSessionQueue.length > 0 ? (currentIndex / currentSessionQueue.length) * 100 : 0;
+
+  const handleStartSession = (alphabet: "hiragana" | "katakana" | "all") => {
+    initializeSession(alphabet);
+    setShowOptions(false);
+  };
+
+  if (showOptions) {
+    return (
+      <div className="bg-surface-bright text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col pt-24 pb-32">
+        <TopAppBar progressPercent={0} />
+        <main className="flex flex-col items-center justify-center p-6 flex-1 w-full max-w-2xl mx-auto space-y-8 animate-fade-in relative">
+          <div className="w-full text-center relative z-10">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-on-surface mb-3 font-headline tracking-tight">
+              Pratik Seansı Başlat
+            </h2>
+            <p className="text-base md:text-lg text-on-surface-variant font-medium">
+              Çalışmak istediğin alfabe grubunu seç.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+            <button
+              onClick={() => handleStartSession("hiragana")}
+              className="flex flex-col items-center gap-3 p-6 bg-white border-2 border-primary/20 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm hover:shadow-md"
+            >
+              <span className="text-5xl font-japanese text-primary">あ</span>
+              <span className="font-bold text-lg">Hiragana</span>
+            </button>
+            <button
+              onClick={() => handleStartSession("katakana")}
+              className="flex flex-col items-center gap-3 p-6 bg-white border-2 border-secondary/20 rounded-3xl hover:border-secondary hover:bg-secondary/5 transition-all shadow-sm hover:shadow-md"
+            >
+              <span className="text-5xl font-japanese text-secondary">ア</span>
+              <span className="font-bold text-lg">Katakana</span>
+            </button>
+            <button
+              onClick={() => handleStartSession("all")}
+              className="flex flex-col items-center gap-3 p-6 bg-white border-2 border-tertiary/20 rounded-3xl hover:border-tertiary hover:bg-tertiary/5 transition-all shadow-sm hover:shadow-md"
+            >
+              <span className="text-5xl font-japanese text-tertiary">あア</span>
+              <span className="font-bold text-lg">Karışık</span>
+            </button>
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-surface-bright text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col pt-24 pb-32">
@@ -119,7 +171,7 @@ export default function LearnPage() {
               <span className="material-symbols-outlined text-5xl">celebration</span>
             </div>
             <button
-              onClick={initializeSession}
+              onClick={() => setShowOptions(true)}
               className="w-full flex justify-center items-center gap-3 px-8 py-4 bg-primary hover:bg-primary-dim border border-transparent text-on-primary font-bold rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-95"
             >
               <span className="material-symbols-outlined">replay</span>
