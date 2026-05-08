@@ -40,7 +40,12 @@ function buildReviewQueue(
         id: vocab.id,
         frontJapanese: vocab.character,
         frontRomaji: vocab.romaji,
-        backMeaning: vocab.word_example?.meaning_tr ?? vocab.romaji,
+        backMeaning: (vocab.type === "hiragana" || vocab.type === "katakana") 
+          ? vocab.romaji 
+          : (vocab.meaning_tr || vocab.word_example?.meaning_tr || vocab.romaji),
+        backExplanation: vocab.word_example 
+          ? `Örnek: ${vocab.word_example.japanese} (${vocab.word_example.romaji}) - ${vocab.word_example.meaning_tr} ${vocab.word_example.emoji || ''}`
+          : undefined,
       });
     }
   };
