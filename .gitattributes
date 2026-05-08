@@ -1,0 +1,21 @@
+# Handle line endings automatically for cross-platform compatibility
+* text=auto
+
+# TypeScript / JavaScript
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.css  text eol=lf
+*.mjs  text eol=lf
+
+# Images & Binaries
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary

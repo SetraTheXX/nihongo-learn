@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { href: "/", label: "Ana Sayfa", icon: "home" },
   { href: "/learn", label: "Öğren", icon: "school" },
   { href: "/quiz", label: "Quiz", icon: "auto_stories" },
-  { href: "#", label: "Ayarlar", icon: "settings" },
+  { href: "/profile", label: "Profil", icon: "person" },
 ];
 
 export default function BottomNavBar() {

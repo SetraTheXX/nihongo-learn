@@ -8,7 +8,7 @@ import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
 
 export default function DashboardPage() {
-  const { stats, cardsData } = useLearningStore();
+  const { stats, cardsData, getDueCardsCount } = useLearningStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -34,6 +34,7 @@ export default function DashboardPage() {
   const totalAnswered = stats.totalAnswered || 0;
   const totalCorrect = stats.totalCorrect || 0;
   const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const dueCardsCount = getDueCardsCount();
 
   const welcomeMsg =
     cardsInteracted === 0
@@ -124,6 +125,93 @@ export default function DashboardPage() {
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzHQKn-hImvGZrOWdg--OdZODs1HfDZ9hQtNDFwE5vWeoSwBQgSMox90twRZaFtq0K39CFE8Gs6KYR80LpkedL-K078nyxpl6IvP8GwhJZ0mhrHsL6WI6kAIjt8gmuAMtq0vdYKU0McxYdO-QJ-cGsdSX__a3p1mwkIZM_e-8AOe_O3gS3CNh1kXa_ASlNvAqJF_5MhcpgTJK0bzLExNuMfUo0HRFT_-GBJmK1dd86sRUnUxqwA1HLEe67GGtK9DkMw8lj0jwgYpo"
               />
             </div>
+          </Link>
+
+          {/* ── Tekrar Et (SRS) ── */}
+          <Link
+            href="/review"
+            id="dashboard-review-card"
+            className="block group relative overflow-hidden rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-outline-variant/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 active:scale-[0.98]"
+            style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}
+          >
+            {/* Dekoratif arka plan */}
+            <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute right-4 top-4 text-white/[0.05] text-[90px] font-japanese select-none leading-none">復</div>
+              <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-blue-400/[0.06] rounded-full" />
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-16 h-16 bg-blue-500/20 border border-blue-400/30 rounded-2xl flex items-center justify-center shadow-sm">
+                  <span className="material-symbols-outlined text-blue-300 text-4xl">psychology</span>
+                </div>
+                {/* Due badge */}
+                {dueCardsCount > 0 && (
+                  <div className="flex items-center gap-1.5 bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+                    <span>⏰</span>
+                    <span>{dueCardsCount} bekliyor</span>
+                  </div>
+                )}
+              </div>
+
+              <h2 className="text-3xl font-extrabold text-white mb-4 font-headline tracking-tight">
+                Tekrar Et
+              </h2>
+              <p className="text-white/60 text-lg max-w-xs mb-8 font-medium">
+                SM-2 algoritmasıyla unutmadan önce hatırla.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="px-5 py-2.5 bg-blue-500/30 border border-blue-400/40 text-blue-200 rounded-[1rem] font-bold text-sm">
+                  {dueCardsCount > 0 ? `${dueCardsCount} Kart Bekliyor` : "Güncel Durum: ✅"}
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-blue-400/30 flex items-center justify-center bg-white/5 shadow-sm transition-transform group-hover:translate-x-1">
+                  <span className="material-symbols-outlined text-blue-300 text-sm">arrow_forward</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* ── Yeni Özellikler Grid ── */}
+        <div className="grid grid-cols-2 gap-4 mt-8">
+          {/* Okuma */}
+          <Link
+            href="/reading"
+            className="group bg-white rounded-2xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] transition-all"
+          >
+            <div className="text-3xl mb-3">📖</div>
+            <h3 className="font-bold text-on-surface text-sm font-headline">Mini Hikayeler</h3>
+            <p className="text-xs text-on-surface-variant mt-1">Kelime ve grameri bağlamda oku.</p>
+          </Link>
+
+          {/* Sınav */}
+          <Link
+            href="/exam"
+            className="group bg-white rounded-2xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] transition-all"
+          >
+            <div className="text-3xl mb-3">🎓</div>
+            <h3 className="font-bold text-on-surface text-sm font-headline">N5 Sınavı</h3>
+            <p className="text-xs text-on-surface-variant mt-1">30 soruluk deneme sınavı.</p>
+          </Link>
+
+          {/* Liderlik */}
+          <Link
+            href="/leaderboard"
+            className="group bg-white rounded-2xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] transition-all"
+          >
+            <div className="text-3xl mb-3">🏆</div>
+            <h3 className="font-bold text-on-surface text-sm font-headline">Sıralama</h3>
+            <p className="text-xs text-on-surface-variant mt-1">Liderlik tablosu ve rozetler.</p>
+          </Link>
+
+          {/* Çizim */}
+          <Link
+            href="/drawing"
+            className="group bg-white rounded-2xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] transition-all"
+          >
+            <div className="text-3xl mb-3">✍️</div>
+            <h3 className="font-bold text-on-surface text-sm font-headline">Yazma Pratiği</h3>
+            <p className="text-xs text-on-surface-variant mt-1">Kana çizim tahtası.</p>
           </Link>
         </div>
 
