@@ -1,6 +1,6 @@
 # Nihongo Learn 🎌
 
-> **⚠️ Önemli Uyarı:** Bu proje, tamamen kişisel bir Japonca öğrenme hevesiyle başlanmış, geliştirilmekte olan bir hobi projesidir. Açık kaynak olarak paylaşılmıştır ancak hala yapım aşamasındadır.
+> **⚠️ Önemli Uyarı:** Bu proje, tamamen kişisel bir Japonca öğrenme hevesiyle başlanmış, geliştirilmekte olan bir hobi projesidir. **Modern yapay zeka araçları yardımıyla geliştirilmektedir.** Açık kaynak olarak paylaşılmıştır ancak hala yapım aşamasındadır.
 
 > **Türkçe konuşanlar için bilimsel temelli, modern Japonca öğrenme platformu.**
 
@@ -166,7 +166,3 @@ npm run lint     # ESLint kontrolü
 ## 📄 Lisans
 
 MIT License — dilediğin gibi kullan, geliştir, dağıt.
-
----
-
-*Bu proje Antigravity AI rehberliğinde geliştirilmektedir.*
