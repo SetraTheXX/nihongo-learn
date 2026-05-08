@@ -1,5 +1,7 @@
 # Nihongo Learn 🎌
 
+> **⚠️ Önemli Uyarı:** Bu proje, tamamen kişisel bir Japonca öğrenme hevesiyle başlanmış, geliştirilmekte olan bir hobi projesidir. Açık kaynak olarak paylaşılmıştır ancak hala yapım aşamasındadır.
+
 > **Türkçe konuşanlar için bilimsel temelli, modern Japonca öğrenme platformu.**
 
 Busuu & Duolingo standartlarına göre tasarlanmış A1 (JLPT N5) müfredatını kapsar. SM-2 aralıklı tekrar algoritması, interaktif okuma parçaları, N5 sınav simülatörü ve kana çizim tahtası içerir.
