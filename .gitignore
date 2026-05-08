@@ -1,49 +1,67 @@
-# dependencies
+# ── Dependencies ──────────────────────────────────────────────
 /node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
-# testing
-/coverage
-
-# next.js
+# ── Next.js ───────────────────────────────────────────────────
 /.next/
 /out/
-
-# production
 /build
 
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
+# ── Environment (NEVER commit secrets) ────────────────────────
 .env
 .env*.local
 .env.development
 .env.production
+# Safe to commit: .env.example
 
-# vercel
+# ── Testing & Coverage ────────────────────────────────────────
+/coverage
+
+# ── Vercel / Deployment ───────────────────────────────────────
 .vercel
 
-# typescript
+# ── TypeScript ────────────────────────────────────────────────
 *.tsbuildinfo
 next-env.d.ts
 
-# IDEs
+# ── IDEs & Editors ────────────────────────────────────────────
 .idea/
+.vscode/settings.json
 .project
 .classpath
 .settings/
 *.swp
 *.swo
 
-# Project specific
+# ── OS Files ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.pem
+
+# ── Debug Logs ────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── AI Agent Files (local workflow tools) ─────────────────────
+.agent/
+.agents/
+mempalace.yaml
+entities.json
+
+# ── Memory Bank (local session context, not for repo) ─────────
+memory-bank/
+
+# ── Personal Research & Notes ─────────────────────────────────
+busuu.txt
+*.txt
+
+# ── Project Planning Files (optional: kaldır repoda görmek istiyorsan) ──
+PLAN-*.md
+
+# ── Project specific assets ───────────────────────────────────
 /public/assets/temp/*
 !/public/assets/.gitkeep

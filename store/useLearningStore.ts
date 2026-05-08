@@ -46,6 +46,10 @@ interface LearningState {
   setUserId: (userId: string | null) => void;
   syncWithCloud: () => Promise<void>;
   clearLocalData: () => void;
+
+  // Computed selectors
+  getDueCardsCount: () => number;
+  getDailyGoalProgress: () => { done: number; goal: number; percent: number };
 }
 
 export const useLearningStore = create<LearningState>()(
@@ -277,6 +281,31 @@ export const useLearningStore = create<LearningState>()(
           pushDailyStats(userId, newStats).catch(() => {});
           pushStreak(userId, newStats.streak).catch(() => {});
         }
+      },
+
+      // ── Computed Selectors ──────────────────────────────────
+
+      getDueCardsCount: () => {
+        const { cardsData } = get();
+        const now = new Date();
+        return Object.values(cardsData).filter(
+          (item) => new Date(item.nextReviewDate) <= now
+        ).length;
+      },
+
+      getDailyGoalProgress: () => {
+        const { stats } = get();
+        const DAILY_GOAL = 20; // Hedef: günde 20 kart veya aksiyon
+        const done = Math.min(stats.totalAnswered % DAILY_GOAL || 0, DAILY_GOAL);
+        // Bugün çalışıldıysa (lastStudyDate === bugün) done hesapla
+        const todayStr = new Date().toISOString().split('T')[0];
+        const studiedToday = stats.lastStudyDate === todayStr;
+        const doneClamped = studiedToday ? Math.min(stats.totalAnswered, DAILY_GOAL) : 0;
+        return {
+          done: doneClamped,
+          goal: DAILY_GOAL,
+          percent: Math.min(100, Math.round((doneClamped / DAILY_GOAL) * 100)),
+        };
       },
     }),
     {
