@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { playAudio } from "@/lib/tts";
 
 interface ReviewCardProps {
   front: {
@@ -26,13 +25,6 @@ export default function ReviewCard({
   onAnswer,
 }: ReviewCardProps) {
   const [flipped, setFlipped] = useState(false);
-
-  // Kart değiştiğinde (yeni kart geldiğinde) kelimeyi otomatik seslendir
-  useEffect(() => {
-    if (!flipped && front.japanese) {
-      playAudio(front.japanese);
-    }
-  }, [cardIndex, front.japanese, flipped]);
 
   const handleFlip = () => {
     if (!flipped) setFlipped(true);
@@ -88,17 +80,6 @@ export default function ReviewCard({
             style={{ backfaceVisibility: "hidden" }}
             className="w-full min-h-[260px] bg-white rounded-3xl shadow-xl border border-outline-variant/20 flex flex-col items-center justify-center p-8 gap-3 relative"
           >
-            {/* Ses Butonu */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Kartın dönmesini engelle
-                playAudio(front.japanese);
-              }}
-              className="absolute top-4 right-4 p-3 rounded-full bg-surface-variant/30 text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors"
-              aria-label="Sesli oku"
-            >
-              <span className="material-symbols-outlined">volume_up</span>
-            </button>
 
             <p className="text-7xl font-japanese text-on-surface font-bold tracking-tight">
               {front.japanese}
