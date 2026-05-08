@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playAudio } from "@/lib/tts";
 
 interface FuriganaTextProps {
   japanese: string;
@@ -43,6 +44,9 @@ export default function FuriganaText({ japanese, words }: FuriganaTextProps) {
     word: (typeof words)[number],
     event: React.MouseEvent
   ) => {
+    // Tıklanan kelimeyi seslendir
+    playAudio(word.japanese);
+
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     const containerRect = containerRef.current?.getBoundingClientRect();
     if (!containerRect) return;
@@ -58,7 +62,16 @@ export default function FuriganaText({ japanese, words }: FuriganaTextProps) {
   };
 
   return (
-    <div ref={containerRef} className="relative inline">
+    <div ref={containerRef} className="relative inline-flex items-start gap-3">
+      {/* Cümleyi komple seslendirme butonu */}
+      <button
+        onClick={() => playAudio(japanese)}
+        className="mt-1 flex-shrink-0 p-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+        aria-label="Cümleyi sesli oku"
+      >
+        <span className="material-symbols-outlined text-lg">volume_up</span>
+      </button>
+
       <p className="text-2xl md:text-3xl font-japanese leading-relaxed tracking-wide text-on-surface">
         {segments.map((seg, i) => {
           if (seg.matched) {
