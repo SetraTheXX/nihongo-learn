@@ -1,6 +1,6 @@
 # Nihongo Learn 🎌
 
-> **⚠️ Önemli Uyarı:** Bu proje, tamamen kişisel bir Japonca öğrenme hevesiyle gece 01:00'de spontane olarak başlanmış bir hobi projesidir. İleride bir domain alıp canlıda yayınlayabilirim, ancak şu an **tamamen lokalde çalışmaktadır**. İsteyen herkes indirip, kurup, geliştirebilir. Gözden kaçan hatalar veya fazla plan yapılmadığı için mantık hataları olabilir. Katkıda bulunursanız veya hataları düzeltirseniz çok sevinirim! Modern yapay zeka araçları yardımıyla geliştirilmektedir.
+> **⚠️ Önemli Uyarı:** Bu proje, tamamen kişisel bir Japonca öğrenme hevesiyle gece 01:00'de spontane olarak başlanmış bir hobi projesidir ve hala gelişme aşamasındadır. İleride bir domain alıp canlıda yayınlayabilirim, ancak şu an **tamamen lokalde çalışmaktadır**. İsteyen herkes indirip, kurup, geliştirebilir. Gözden kaçan hatalar veya fazla plan yapılmadığı için mantık hataları olabilir. Katkıda bulunursanız veya hataları düzeltirseniz çok sevinirim! Modern yapay zeka araçları yardımıyla geliştirilmektedir.
 
 > **Türkçe konuşanlar için bilimsel temelli, modern Japonca öğrenme platformu.**
 
