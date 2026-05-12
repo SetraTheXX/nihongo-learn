@@ -1,42 +1,44 @@
 # Nihongo Learn
 
-Türkçe konuşanlar için Japonca öğrenme odaklı, Next.js ile geliştirilmiş bir MVP.
+A Japanese-learning MVP for Turkish-speaking beginners, built with Next.js, TypeScript, Tailwind CSS, Zustand, and optional Supabase sync.
 
-Bu proje benim Japonca öğrenme sürecimi yazılım pratiğiyle birleştirdiğim kişisel bir öğrenme projesi. Amacı tek seferde dev bir ürün olmak değil; çalışan parçaları net göstermek, eksikleri dürüstçe ayırmak ve faz faz geliştirilebilir bir öğrenme uygulaması ortaya koymak.
+This is a personal learning project where I combine my own Japanese study process with practical product engineering. It is not trying to pretend to be a finished commercial app. The goal is to show a working MVP clearly, keep the unfinished parts honest, and leave a clean path for future phases.
 
-## Öne Çıkanlar
+## Highlights
 
-| Alan | Durum |
+| Area | Status |
 | --- | --- |
-| Hiragana / Katakana | 46 + 46 karakter, örnek kelime ve quiz akışı |
-| SM-2 tekrar | LocalStorage tabanlı spaced repetition |
-| A1 kurs | 31 bölümlük temel Japonca akışı |
-| Gamification | XP, streak, günlük görevler ve rozetler |
-| Mini hikayeler | Furigana destekli kısa okuma parçaları |
-| N5 sınavı | Süreli deneme sınavı ve sonuç ekranı |
-| Canvas pratik | Kana çizim tahtası |
-| Supabase | Auth ve sync için opsiyonel bulut modu |
+| Hiragana / Katakana | 46 + 46 characters with example words and quiz flow |
+| Spaced repetition | SM-2 based review data stored locally |
+| A1 course | 31 beginner-friendly Japanese lessons |
+| Gamification | XP, streaks, daily quests, and badges |
+| Mini stories | Short reading practice with furigana support |
+| N5 exam practice | Timed quiz flow with a result screen |
+| Kana drawing | Canvas-based handwriting practice board |
+| Supabase | Optional auth and cloud sync mode |
 
-## Canlılık Durumu
+## Current Status
 
-Proje şu anda Faz 4 öncesi stabilizasyon aşamasında. Faz 1-3.5 kapsamındaki ana ekranlar ve local MVP akışı çalışır durumda. Ses/TTS desteği daha önce denendi, kalite ve tutarlılık sorunları nedeniyle geri alındı; bu alan Faz 4'te daha kontrollü şekilde ele alınacak.
+Nihongo Learn is currently in a pre-Phase 4 stabilization pass. The main Phase 1-3.5 surfaces are implemented and the local MVP flow is usable.
 
-## Sayfa Haritası
+Text-to-speech was explored earlier, but the first implementation was removed because browser voice quality and consistency were not good enough. Audio/TTS is intentionally parked for Phase 4, where it can be reintroduced with better fallbacks and clearer quality expectations.
+
+## Routes
 
 ```text
 /              Dashboard
-/learn         Kartlar ve kurs girişi
-/learn/course  31 bölümlük A1 müfredatı
+/learn         Flashcards and learning entry point
+/learn/course  31-lesson A1 course
 /quiz          Hiragana / Katakana quiz
-/review        SM-2 tekrar seansı
-/reading       Mini hikayeler
-/exam          JLPT N5 deneme sınavı
-/leaderboard   Sıralama ve rozetler
-/drawing       Kana çizim tahtası
-/profile       Profil, XP, streak ve görevler
+/review        SM-2 review session
+/reading       Mini stories
+/exam          JLPT N5 practice exam
+/leaderboard   Ranking and badges
+/drawing       Kana drawing board
+/profile       Profile, XP, streaks, and quests
 ```
 
-## Kurulum
+## Getting Started
 
 ```bash
 git clone https://github.com/SetraTheXX/nihongo-learn.git
@@ -45,58 +47,58 @@ npm install
 npm run dev
 ```
 
-Uygulama varsayılan olarak `http://localhost:3000` adresinde çalışır.
+The app runs at `http://localhost:3000` by default.
 
-## Çalışma Modları
+## Running Modes
 
 ### Demo / Local Mode
 
-Supabase env değerleri olmadan uygulama açılır. İlerleme, XP ve tekrar verileri bu cihazdaki localStorage üzerinde saklanır. Public demo ve hızlı inceleme için hedeflenen güvenli mod budur.
+The app can run without Supabase environment variables. Progress, XP, and review data are stored on the current device through localStorage. This is the safest mode for public demos and quick review.
 
 ### Supabase Mode
 
-Auth ve bulut senkronizasyonu için `.env.example` dosyasını `.env.local` olarak kopyalayın:
+To enable auth and cloud sync, copy `.env.example` to `.env.local`:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Sonra Supabase Dashboard -> Settings -> API bölümünden yalnızca public client değerlerini ekleyin:
+Then add the public client values from Supabase Dashboard -> Settings -> API:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://PROJE_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_ID.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=anon-public-key
 ```
 
-Service role key, database password veya admin secret bu projeye ve client env değişkenlerine eklenmemelidir. Güvenlik RLS politikaları ve public anon key modeli üzerine kuruludur.
+Do not add a service role key, database password, or admin secret to this project or any client-side environment variable. The security model relies on public anon keys plus RLS policies.
 
-## Teknoloji Stack
+## Tech Stack
 
-| Katman | Teknoloji |
+| Layer | Technology |
 | --- | --- |
 | Framework | Next.js 14 App Router |
-| Dil | TypeScript |
-| Stil | Tailwind CSS + Material Design 3 token yaklaşımı |
-| Animasyon | Framer Motion |
-| State | Zustand + localStorage persist |
-| Backend | Opsiyonel Supabase Auth / PostgreSQL / RLS |
-| SRS | SM-2 algoritması |
+| Language | TypeScript |
+| Styling | Tailwind CSS + Material Design 3 inspired tokens |
+| Animation | Framer Motion |
+| State | Zustand + localStorage persistence |
+| Backend | Optional Supabase Auth / PostgreSQL / RLS |
+| SRS | SM-2 spaced repetition algorithm |
 
-## Yol Haritası
+## Roadmap
 
-- **Faz 1 tamamlandı:** Hiragana, local SM-2, dashboard.
-- **Faz 2 tamamlandı:** Katakana, Supabase auth/db/sync altyapısı.
-- **Faz 3 tamamlandı:** A1 kurs, SRS ekranları, gamification.
-- **Faz 3.5 tamamlandı:** Mini hikayeler, N5 sınavı, leaderboard, canvas çizim.
-- **Faz 4 beklemede:** Ses/TTS araştırması ve PWA desteği.
-- **Sonraki büyük yön:** Kanji/N4 kapsamı, Faz 4 stabil olduktan sonra ele alınacak.
+- **Phase 1 done:** Hiragana, local SM-2, dashboard.
+- **Phase 2 done:** Katakana, Supabase auth/db/sync foundation.
+- **Phase 3 done:** A1 course, SRS screens, gamification.
+- **Phase 3.5 done:** Mini stories, N5 exam practice, leaderboard, canvas drawing.
+- **Phase 4 parked:** Audio/TTS research and PWA support.
+- **Later direction:** Kanji and N4 content after Phase 4 is stable.
 
-## Repo Notları
+## Repository Notes
 
-- `.env.local` ve kişisel çalışma notları Git dışında tutulur.
-- Public dokümanlar README ve product brief odaklıdır.
-- TTS şu anda kapalıdır; tekrar eklenecekse önce kalite ve fallback stratejisi netleştirilecektir.
+- `.env.local` and personal planning notes are intentionally kept out of Git.
+- Public documentation is focused on the README and product brief.
+- TTS is currently disabled. If it comes back, it should ship with a clear fallback and quality strategy.
 
-## Lisans
+## License
 
 MIT
