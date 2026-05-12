@@ -17,6 +17,26 @@ This is a personal learning project where I combine my own Japanese study proces
 | Kana drawing | Canvas-based handwriting practice board |
 | Supabase | Optional auth and cloud sync mode |
 
+## Screenshots
+
+### Dashboard
+![Dashboard](./docs/screenshots/dashboard.png)
+
+### Learn Menu
+![Learn menu](./docs/screenshots/learn-menu.png)
+
+### Course Flow
+![Course flow](./docs/screenshots/course-flow.png)
+
+### Flashcard Practice
+![Flashcard practice](./docs/screenshots/flashcard-practice.png)
+
+### Quiz
+![Quiz](./docs/screenshots/quiz.png)
+
+### Profile
+![Profile](./docs/screenshots/profile.png)
+
 ## Current Status
 
 Nihongo Learn is currently in a pre-Phase 4 stabilization pass. The main Phase 1-3.5 surfaces are implemented and the local MVP flow is usable.
