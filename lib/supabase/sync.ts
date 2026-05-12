@@ -13,21 +13,12 @@ import type { SM2Item } from "@/lib/sm2";
 
 // ── Kart İlerlemesi ──────────────────────────────────────────────
 
-interface CardProgressRow {
-  card_id: string;
-  ease_factor: number;
-  interval: number;
-  repetitions: number;
-  next_review: string;
-  last_answer: "again" | "good" | "easy";
-  last_reviewed_at: string;
-}
-
 /**
  * Supabase'den kullanıcının tüm kart ilerlemesini çek
  */
 export async function fetchCloudProgress(userId: string): Promise<Record<string, SM2Item>> {
   const supabase = createClient();
+  if (!supabase) return {};
 
   const { data, error } = await supabase
     .from("card_progress")
@@ -87,6 +78,7 @@ export async function pushCardsToCloud(
   cardsData: Record<string, SM2Item>
 ): Promise<boolean> {
   const supabase = createClient();
+  if (!supabase) return false;
 
   const rows = Object.entries(cardsData).map(([cardId, item]) => ({
     user_id: userId,
@@ -120,6 +112,7 @@ export async function pushSingleCard(
   quality: number
 ): Promise<void> {
   const supabase = createClient();
+  if (!supabase) return;
 
   await supabase
     .from("card_progress")
@@ -154,6 +147,7 @@ export async function pushDailyStats(
   stats: UserStats
 ): Promise<void> {
   const supabase = createClient();
+  if (!supabase) return;
   const today = new Date().toISOString().split("T")[0];
 
   await (supabase.rpc as any)("upsert_daily_stats", {
@@ -175,6 +169,7 @@ export async function pushStreak(
   streak: number
 ): Promise<void> {
   const supabase = createClient();
+  if (!supabase) return;
 
   await (supabase.rpc as any)("update_streak", {
     p_user_id: userId,
@@ -188,6 +183,7 @@ export async function pushStreak(
  */
 export async function fetchCloudXP(userId: string): Promise<number> {
   const supabase = createClient();
+  if (!supabase) return 0;
 
   const { data } = await supabase
     .from("daily_stats")
@@ -203,6 +199,7 @@ export async function fetchCloudXP(userId: string): Promise<number> {
  */
 export async function fetchCloudStreak(userId: string): Promise<{ current: number; longest: number }> {
   const supabase = createClient();
+  if (!supabase) return { current: 0, longest: 0 };
 
   const { data } = await supabase
     .from("streaks")

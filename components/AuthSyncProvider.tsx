@@ -17,6 +17,8 @@ export default function AuthSyncProvider({ children }: { children: React.ReactNo
     hasInitialized.current = true;
 
     const supabase = createClient();
+    if (!supabase) return;
+
     const { setUserId, syncWithCloud } = useLearningStore.getState();
 
     // İlk yüklemede mevcut session'ı kontrol et
