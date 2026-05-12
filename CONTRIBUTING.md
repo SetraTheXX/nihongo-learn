@@ -1,83 +1,94 @@
-# Katkı Rehberi
+# Contributing Guide
 
-Nihongo Learn'e katkıda bulunmak istediğin için teşekkürler! 🎌
+Thanks for taking an interest in Nihongo Learn.
 
-## Başlamadan Önce
+This is a learning-focused MVP, so contributions are welcome, especially when they make the app clearer, more reliable, easier to run, or better documented.
 
-1. Repoyu fork'la
-2. `git clone` ile yerel makinene çek
-3. `npm install` ile bağımlılıkları yükle
-4. `cp .env.example .env.local` yap ve Supabase bilgilerini doldur
+## Before You Start
 
-## Branch Stratejisi
+1. Fork the repository.
+2. Clone it locally.
+3. Install dependencies with `npm install`.
+4. Run the app with `npm run dev`.
+5. Supabase is optional. If you want to test auth and cloud sync, copy `.env.example` to `.env.local` and add your own public Supabase values.
 
+## Branch Naming
+
+```text
+master        Stable public branch
+feature/xxx   New features
+fix/xxx       Bug fixes
+content/xxx   Course content updates under data/
+docs/xxx      Documentation updates
 ```
-main          → Kararlı, production-ready kod
-feature/xxx   → Yeni özellikler
-fix/xxx       → Hata düzeltmeleri
-content/xxx   → Kurs içeriği güncellemeleri (data/ dizini)
-```
 
-## Geliştirme Süreci
+## Development Flow
 
 ```bash
-# Feature branch oluştur
-git checkout -b feature/yeni-ozellik
+# Create a branch
+git checkout -b feature/short-description
 
-# Değişikliklerini yap
-# ...
+# Make your changes
 
-# Build doğrulaması (PR açmadan önce ZORUNLU)
-npm run build
-
-# Lint kontrolü
+# Check the project before opening a PR
 npm run lint
+npm run build
 
 # Commit
 git add .
-git commit -m "feat: yeni özellik açıklaması"
+git commit -m "feat: short description"
 
 # Push
-git push origin feature/yeni-ozellik
+git push origin feature/short-description
 ```
 
-## Commit Mesajı Formatı
+## Commit Message Style
 
-[Conventional Commits](https://www.conventionalcommits.org/) standardı:
+Please follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
-feat:     Yeni özellik
-fix:      Hata düzeltmesi
-content:  Kurs içeriği ekleme/güncelleme
-refactor: Kod refactoring
-style:    Stil/UI değişikliği
-docs:     Belge güncellemesi
-chore:    Build, config değişikliği
-```
-
-Örnekler:
-```
-feat: leaderboard sayfasına rozet sistemi ekle
-fix: review sayfasındaki SM-2 hesaplama hatası
-content: chapter12 gramer örnekleri güncelle
+```text
+feat:     New feature
+fix:      Bug fix
+content:  Course content addition or update
+refactor: Code refactor
+style:    UI or styling change
+docs:     Documentation update
+chore:    Build, tooling, or configuration change
 ```
 
-## Kurs İçeriği Katkısı
+Examples:
 
-`data/course/` altındaki bölümlere yeni kelime/gramer eklemek istiyorsan:
+```text
+feat: add badge progress section to leaderboard
+fix: correct SM-2 review calculation for repeated cards
+content: update chapter 12 grammar examples
+docs: clarify Supabase demo mode
+```
 
-1. İlgili `chapterX.ts` dosyasını düzenle
-2. `GrammarItem` veya `VocabItem` tipine uymaya dikkat et
-3. Türkçe anlamları (`meaning_tr`) eksiksiz yaz
-4. `npm run build` ile TypeScript hatası olmadığını doğrula
+## Course Content Contributions
 
-## PR Açma Kuralları
+If you want to update content under `data/course/`:
 
-- PR başlığı Türkçe veya İngilizce olabilir
-- PR açıklamasında ne yaptığını, neden yaptığını anlat
-- `npm run build` başarılı olmalı (CI bunu kontrol eder)
-- Büyük değişiklikler için önce bir Issue aç
+1. Edit the relevant `chapterX.ts` file.
+2. Keep the existing `GrammarItem`, `VocabItem`, and lesson section shapes.
+3. Keep Turkish meanings in `meaning_tr`, because the app teaches Japanese through Turkish.
+4. Run `npm run build` to catch TypeScript or import issues.
 
-## Sorular?
+## Pull Request Guidelines
 
-Issue açarak sorabilirsin.
+- Keep PRs focused and easy to review.
+- Explain what changed and why.
+- Include screenshots for UI changes when possible.
+- Run `npm run lint` and `npm run build` before opening a PR.
+- Open an issue first for large roadmap changes such as TTS, PWA, Kanji, or N4 content.
+
+## Reporting Bugs
+
+This project is still in active development, so bugs or rough edges may exist. If you find one, please open an issue with:
+
+- What happened.
+- What you expected.
+- Steps to reproduce.
+- Browser and device information, if relevant.
+
+Clear reports help a lot. Thanks again.

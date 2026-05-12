@@ -23,6 +23,8 @@ Nihongo Learn is currently in a pre-Phase 4 stabilization pass. The main Phase 1
 
 Text-to-speech was explored earlier, but the first implementation was removed because browser voice quality and consistency were not good enough. Audio/TTS is intentionally parked for Phase 4, where it can be reintroduced with better fallbacks and clearer quality expectations.
 
+> **Note:** This repository is still in active development. Some bugs, rough edges, or unfinished flows may exist. If you find an issue, please report it through GitHub Issues so it can be tracked and improved.
+
 ## Routes
 
 ```text
