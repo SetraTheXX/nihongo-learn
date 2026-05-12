@@ -16,10 +16,16 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
   const supabase = createClient();
+  const isAuthEnabled = Boolean(supabase);
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (!supabase) {
+      setError("Bu demo modunda kayıt kapalı. Supabase env değerleri eklenince auth/sync aktif olur.");
+      return;
+    }
 
     // Şifre kontrolü
     if (password !== confirmPassword) {
@@ -63,6 +69,11 @@ export default function RegisterPage() {
 
   async function handleGoogleRegister() {
     setError(null);
+    if (!supabase) {
+      setError("Bu demo modunda Google kaydı kapalı. Supabase env değerleri eklenince aktif olur.");
+      return;
+    }
+
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -240,7 +251,7 @@ export default function RegisterPage() {
             {/* Kayıt Ol Butonu */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !isAuthEnabled}
               className="w-full py-3.5 rounded-xl bg-primary text-on-primary font-bold text-sm uppercase tracking-wider hover:bg-primary-dim transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
             >
               {loading ? (
@@ -270,7 +281,8 @@ export default function RegisterPage() {
           {/* Google ile Kayıt */}
           <button
             onClick={handleGoogleRegister}
-            className="w-full py-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 text-on-surface font-semibold text-sm flex items-center justify-center gap-3 hover:bg-surface-container hover:border-outline-variant/50 transition-all"
+            disabled={!isAuthEnabled}
+            className="w-full py-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 text-on-surface font-semibold text-sm flex items-center justify-center gap-3 hover:bg-surface-container hover:border-outline-variant/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />

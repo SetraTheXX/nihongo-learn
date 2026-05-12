@@ -29,6 +29,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function loadProfile() {
+      if (!supabase) {
+        setDisplayName("Demo Öğrenci");
+        setLoading(false);
+        return;
+      }
+
       const { data: { user: currentUser } } = await supabase.auth.getUser();
 
       if (!currentUser) {
@@ -58,6 +64,10 @@ export default function ProfilePage() {
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
+    if (!supabase) {
+      setMessage({ type: "success", text: "Demo modunda profil bu cihazdaki local ilerleme ile kullanılıyor." });
+      return;
+    }
     if (!user) return;
     setSaving(true);
     setMessage(null);
@@ -75,6 +85,13 @@ export default function ProfilePage() {
   }
 
   async function handleLogout() {
+    if (!supabase) {
+      useLearningStore.getState().clearLocalData();
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();

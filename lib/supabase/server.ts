@@ -2,16 +2,27 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./database.types";
 
+export function isSupabaseConfigured() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
+
 /**
- * Sunucu tarafı (Server Component / Route Handler) Supabase istemcisi.
- * Server Component'ler, API rotaları ve middleware'de kullan.
+ * Server-side Supabase helper.
+ * Returns null when env is missing so public demo builds do not require auth.
  */
 export async function createClient() {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
     {
       cookies: {
         getAll() {
@@ -23,8 +34,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Server Component'te çağrılırsa set çalışmaz — sorun değil.
-            // Middleware veya Route Handler'da çalışacak.
+            // Server Components cannot set cookies; middleware/route handlers can.
           }
         },
       },

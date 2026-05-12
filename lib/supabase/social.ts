@@ -16,6 +16,7 @@ export interface LeaderboardEntry {
  */
 export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   const supabase = createClient();
+  if (!supabase) return generateMockLeaderboard();
 
   try {
     const { data, error } = await supabase
