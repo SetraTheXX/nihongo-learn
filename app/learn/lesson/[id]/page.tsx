@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { japaneseCourse, findLesson } from "@/data/course";
-import type { Lesson, VocabItem, SlideContent } from "@/data/course";
+import type { Lesson, SlideContent } from "@/data/course";
 import { hiraganaData } from "@/data/hiragana";
 import { katakanaData } from "@/data/katakana";
 const allAlphabetData = [...hiraganaData, ...katakanaData];
@@ -67,21 +67,29 @@ export default function LessonPage() {
     );
   }
 
-  // Ders türüne göre doğru bileşeni yükle
-  if (lesson.type === "flashcard" || lesson.type === "checkpoint") {
-    return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
-  }
+  const hasCards = Boolean(lesson.cardIds?.length || lesson.vocabItems?.length);
+  const hasGrammar = Boolean(lesson.grammarItems?.length);
+  const hasReading = Boolean(lesson.readingContent);
 
-  if (lesson.type === "quiz") {
-    return <QuizLesson lesson={lesson} sectionTitle={section.title} />;
-  }
-
-  if (lesson.type === "grammar") {
+  // Prefer actual lesson content over the declared type. Some entries start
+  // with intro slides and then continue as grammar, not flashcards.
+  if (hasGrammar) {
     return <GrammarLesson lesson={lesson} sectionTitle={section.title} />;
   }
 
-  // Fallback: flashcard modunda aç
-  return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
+  if (lesson.type === "quiz" && hasCards) {
+    return <QuizLesson lesson={lesson} sectionTitle={section.title} />;
+  }
+
+  if (hasCards) {
+    return <FlashcardLesson lesson={lesson} sectionTitle={section.title} />;
+  }
+
+  if (hasReading) {
+    return <ReadingLesson lesson={lesson} sectionTitle={section.title} />;
+  }
+
+  return <ContentPlaceholder lesson={lesson} sectionTitle={section.title} />;
 }
 
 // ── Bilgi Slaytı Dersi ──────────────────────────────────────────
@@ -342,7 +350,7 @@ function FlashcardLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitl
 
 // ── Quiz Dersi ──────────────────────────────────────────────────
 
-function QuizLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: string }) {
+function QuizLesson({ lesson }: { lesson: Lesson; sectionTitle: string }) {
   const router = useRouter();
   const recordQuizAnswer = useLearningStore((s) => s.recordQuizAnswer);
   const completeLesson = useLearningStore((s) => s.completeLesson);
@@ -488,6 +496,97 @@ function QuizLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: st
     </div>
   );
 }
+
+function ReadingLesson({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: string }) {
+  const router = useRouter();
+  const completeLesson = useLearningStore((s) => s.completeLesson);
+  const content = lesson.readingContent;
+
+  if (!content) {
+    return <ContentPlaceholder lesson={lesson} sectionTitle={sectionTitle} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-surface-bright flex flex-col">
+      <div className="bg-white border-b border-outline-variant/20 px-4 py-3 safe-area-top">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <button onClick={() => router.push("/learn/course")} className="p-2 -ml-2 rounded-xl hover:bg-surface-container transition-colors">
+            <span className="material-symbols-outlined text-on-surface-variant">close</span>
+          </button>
+          <div>
+            <p className="text-xs text-on-surface-variant">{sectionTitle}</p>
+            <h1 className="text-lg font-bold font-headline text-on-surface">{lesson.title}</h1>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 px-4 py-8 max-w-2xl mx-auto w-full">
+        <div className="bg-white rounded-3xl border border-outline-variant/30 shadow-sm p-6 space-y-5">
+          <h2 className="text-2xl font-bold text-on-surface font-headline">{content.title}</h2>
+          <p className="text-3xl font-japanese leading-relaxed text-on-surface whitespace-pre-wrap">{content.japanese}</p>
+          <p className="text-on-surface-variant leading-relaxed whitespace-pre-wrap">{content.romaji}</p>
+          <div className="rounded-2xl bg-primary/5 p-4 text-on-surface font-medium leading-relaxed">{content.translation}</div>
+        </div>
+      </div>
+
+      <div className="p-4 bg-white border-t border-outline-variant/20">
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => { completeLesson(lesson.id, lesson.xpReward); router.push("/learn/course"); }}
+            className="w-full py-4 rounded-2xl bg-primary text-on-primary font-bold text-lg hover:bg-primary-dim transition-colors shadow-sm"
+          >
+            Dersi Tamamla
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContentPlaceholder({ lesson, sectionTitle }: { lesson: Lesson; sectionTitle: string }) {
+  const router = useRouter();
+  const completeLesson = useLearningStore((s) => s.completeLesson);
+
+  return (
+    <div className="min-h-screen bg-surface-bright flex flex-col">
+      <div className="bg-white border-b border-outline-variant/20 px-4 py-3 safe-area-top">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <button onClick={() => router.push("/learn/course")} className="p-2 -ml-2 rounded-xl hover:bg-surface-container transition-colors">
+            <span className="material-symbols-outlined text-on-surface-variant">close</span>
+          </button>
+          <div>
+            <p className="text-xs text-on-surface-variant">{sectionTitle}</p>
+            <h1 className="text-lg font-bold font-headline text-on-surface">{lesson.title}</h1>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="max-w-md w-full bg-white rounded-3xl border border-outline-variant/30 shadow-sm p-8 text-center">
+          <span className="material-symbols-outlined text-5xl text-primary mb-4 block">
+            {lesson.type === "checkpoint" ? "flag" : "menu_book"}
+          </span>
+          <h2 className="text-2xl font-bold text-on-surface font-headline mb-3">{lesson.title}</h2>
+          <p className="text-on-surface-variant leading-relaxed">
+            Bu ders için etkileşimli içerik henüz eklenmemiş. Şimdilik kurs akışında not olarak tutuluyor.
+          </p>
+        </div>
+      </div>
+
+      <div className="p-4 bg-white border-t border-outline-variant/20">
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => { completeLesson(lesson.id, lesson.xpReward); router.push("/learn/course"); }}
+            className="w-full py-4 rounded-2xl bg-primary text-on-primary font-bold text-lg hover:bg-primary-dim transition-colors shadow-sm"
+          >
+            Kursa Dön
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // ── Ders Tamamlanma Ekranı ──────────────────────────────────────
 
